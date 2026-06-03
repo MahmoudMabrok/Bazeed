@@ -9,16 +9,11 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
+import tools.mo3ta.bazeed.navigation.BazeedAppRoot
 import tools.mo3ta.bazeed.ui.theme.BazeedTheme
 
 class MainActivity : ComponentActivity() {
@@ -28,12 +23,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             BazeedTheme {
                 NotificationPermissionGate()
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                BazeedAppRoot()
             }
         }
     }
@@ -46,7 +36,7 @@ private fun NotificationPermissionGate() {
     val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) { /* result is intentionally ignored — denied means no notifications, no retry */ }
+    ) { /* denied means no notifications, no retry */ }
 
     LaunchedEffect(Unit) {
         val granted = ContextCompat.checkSelfPermission(
@@ -56,21 +46,5 @@ private fun NotificationPermissionGate() {
         if (!granted) {
             launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    BazeedTheme {
-        Greeting("Android")
     }
 }
