@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bazeed · Type Specimens — حروف</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Manrope:wght@300;400;500;600;700&family=Reem+Kufi:wght@400;500;600;700&family=Cairo:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Amiri:ital,wght@0,400;0,700;1,400&family=Almarai:wght@300;400;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Tajawal:wght@300;400;500;700;800&family=Mada:wght@300;400;500;700&family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=El+Messiri:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lalezar&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:          #ECE1C7;
+    --paper:       #F7EFDA;
+    --paper-2:     #F1E7CC;
+    --ink:         #1A1814;
+    --ink-soft:    #3D362C;
+    --ink-mute:    #6B5F4C;
+    --green:       #1F3D2F;
+    --saffron:     #C18B3F;
+    --saffron-2:   #E0A858;
+    --terracotta:  #A64B3A;
+    --line:        #C9B98E;
+    --line-dark:   rgba(26,24,20,0.12);
+  }
+
+  * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Manrope', sans-serif;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(900px 600px at 10% 6%, rgba(193,139,63,0.16), transparent 60%),
+      radial-gradient(800px 500px at 95% 60%, rgba(31,61,47,0.10), transparent 60%);
+    z-index: 0;
+  }
+  body::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1  0 0 0 0 0.09  0 0 0 0 0.07  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.4'/></svg>");
+    mix-blend-mode: multiply;
+    opacity: 0.5;
+    z-index: 1;
+  }
+
+  /* ============ NAV ============ */
+  .nav {
+    position: relative; z-index: 5;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 48px;
+    border-bottom: 1px solid var(--line-dark);
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand-mark {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--green); color: var(--paper);
+    display: grid; place-items: center;
+    font-family: 'Reem Kufi', serif; font-weight: 700; font-size: 16px;
+  }
+  .brand-word {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 18px;
+  }
+  .brand-word small {
+    display: block; margin-top: 1px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--ink-mute);
+  }
+  .nav a.back {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--terracotta); text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .nav a.back:hover { color: var(--ink); }
+
+  /* ============ HEADER ============ */
+  .head {
+    position: relative; z-index: 4;
+    padding: 80px 48px 48px;
+    display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px;
+    align-items: end;
+  }
+  .head .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 20px;
+    display: inline-flex; align-items: center; gap: 14px;
+  }
+  .head .eyebrow::before {
+    content: ""; width: 40px; height: 1px; background: var(--green);
+  }
+  .head h1 {
+    margin: 0 0 14px;
+    font-family: 'Fraunces', serif;
+    font-weight: 500; font-style: italic;
+    font-size: clamp(56px, 7vw, 110px);
+    line-height: 0.96; letter-spacing: -0.03em;
+  }
+  .head h1 .glyph {
+    font-family: 'Reem Kufi', serif;
+    font-style: normal; font-weight: 600;
+    color: var(--terracotta);
+    margin-left: 14px;
+  }
+  .head .desc {
+    font-size: 14px; line-height: 1.65; color: var(--ink-soft);
+    max-width: 460px;
+  }
+  .head .desc b {
+    font-family: 'Fraunces', serif; font-weight: 600;
+  }
+  .head .legend {
+    border-top: 1px dashed var(--line);
+    padding-top: 16px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px; letter-spacing: 0.06em;
+    color: var(--ink-mute);
+  }
+  .head .legend b { color: var(--ink); font-weight: 600; font-family: 'Fraunces', serif; letter-spacing: 0; }
+
+  /* ============ INDEX TABLE ============ */
+  .index {
+    position: relative; z-index: 4;
+    padding: 24px 48px 48px;
+    border-top: 1px solid var(--line-dark);
+    border-bottom: 1px solid var(--line-dark);
+  }
+  .index-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--ink-mute); margin-bottom: 18px;
+  }
+  .index-grid {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 0;
+  }
+  .ix {
+    padding: 14px 16px 14px 0;
+    border-right: 1px dashed var(--line);
+  }
+  .ix:last-child { border-right: none; }
+  .ix-num {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 500;
+    color: var(--terracotta); font-size: 14px; margin-bottom: 6px;
+  }
+  .ix-name {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 16px; line-height: 1.2; margin-bottom: 4px;
+  }
+  .ix-fonts {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px; letter-spacing: 0.04em; color: var(--ink-mute);
+    line-height: 1.5;
+  }
+
+  /* ============ SPECIMEN BLOCK ============ */
+  .spec {
+    position: relative; z-index: 3;
+    padding: 64px 48px;
+    border-bottom: 1px solid var(--line-dark);
+    display: grid; grid-template-columns: 260px 1fr; gap: 48px;
+  }
+  .spec.dark {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .spec.dark .meta-num,
+  .spec.dark .meta-tag,
+  .spec.dark .meta-credit,
+  .spec.dark .meta-vibe { color: rgba(247,239,218,0.55); }
+  .spec.dark .meta-name { color: var(--paper); }
+  .spec.dark .meta-name em { color: var(--saffron-2); }
+  .spec.dark .meta-desc { color: rgba(247,239,218,0.7); }
+  .spec.dark .row-body,
+  .spec.dark .row-body .ar { color: rgba(247,239,218,0.78); }
+  .spec.dark .row-line { color: var(--paper); }
+  .spec.dark .row-label { color: var(--saffron-2); border-color: rgba(247,239,218,0.18); }
+  .spec.dark .mini-ui {
+    background: rgba(247,239,218,0.04);
+    border-color: rgba(247,239,218,0.15);
+  }
+  .spec.dark .row-label-sec { color: rgba(247,239,218,0.5); }
+  .spec.dark .row-divider { background: rgba(247,239,218,0.12); }
+
+  .spec-meta { position: sticky; top: 32px; align-self: start; }
+  .meta-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.28em; color: var(--terracotta);
+    margin-bottom: 10px;
+  }
+  .meta-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+    color: var(--ink);
+  }
+  .meta-name em {
+    font-style: italic; font-weight: 500;
+    color: var(--green);
+  }
+  .meta-desc {
+    font-size: 13px; line-height: 1.6; color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+  .meta-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 6px;
+  }
+  .meta-credit {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; line-height: 1.6; color: var(--ink-soft);
+    border-top: 1px dashed var(--line);
+    padding-top: 12px;
+    margin-top: 8px;
+  }
+  .meta-credit div { padding: 2px 0; }
+  .meta-credit b { color: var(--ink); font-weight: 500; }
+  .meta-vibe {
+    margin-top: 16px;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--terracotta);
+  }
+
+  .spec-body { display: flex; flex-direction: column; gap: 32px; }
+
+  /* big row */
+  .row-big {
+    display: flex;
+    align-items: baseline;
+    gap: 48px;
+    flex-wrap: wrap;
+  }
+  .row-big .lat {
+    font-family: var(--d-lat); font-weight: var(--d-lat-w, 600);
+    font-style: var(--d-lat-style, normal);
+    font-size: clamp(72px, 9vw, 140px);
+    line-height: 0.9; letter-spacing: var(--d-lat-tracking, -0.025em);
+    color: inherit;
+  }
+  .row-big .ar {
+    font-family: var(--d-ar); font-weight: var(--d-ar-w, 600);
+    font-size: clamp(72px, 9vw, 140px);
+    line-height: 0.9;
+    color: var(--terracotta);
+    direction: rtl;
+  }
+  .spec.dark .row-big .ar { color: var(--saffron-2); }
+
+  /* tagline row */
+  .row-line {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 36px;
+    border-top: 1px solid var(--line-dark);
+    padding-top: 24px;
+  }
+  .row-line .lat {
+    font-family: var(--d-lat); font-weight: var(--d-lat-w, 500);
+    font-style: italic;
+    font-size: clamp(28px, 3vw, 44px);
+    line-height: 1.15;
+    letter-spacing: var(--d-lat-tracking, -0.015em);
+  }
+  .row-line .ar {
+    font-family: var(--d-ar); font-weight: var(--d-ar-w, 600);
+    font-size: clamp(28px, 3vw, 42px);
+    line-height: 1.25;
+    direction: rtl; text-align: right;
+    color: var(--green);
+  }
+  .spec.dark .row-line .ar { color: var(--saffron-2); }
+
+  /* body paragraph row */
+  .row-body {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 36px;
+    border-top: 1px dashed var(--line);
+    padding-top: 24px;
+  }
+  .spec.dark .row-body { border-color: rgba(247,239,218,0.12); }
+  .row-body .lat {
+    font-family: var(--b-lat); font-weight: var(--b-lat-w, 400);
+    font-size: 16.5px; line-height: 1.65;
+    color: var(--ink-soft);
+    max-width: 36ch;
+  }
+  .spec.dark .row-body .lat { color: rgba(247,239,218,0.78); }
+  .row-body .ar {
+    font-family: var(--b-ar); font-weight: var(--b-ar-w, 400);
+    font-size: 17px; line-height: 1.85;
+    direction: rtl; text-align: right;
+    color: var(--ink-soft);
+    max-width: 36ch;
+    margin-left: auto;
+  }
+
+  /* tertiary labels row */
+  .row-labels {
+    display: flex; gap: 28px; flex-wrap: wrap;
+    border-top: 1px dashed var(--line);
+    padding-top: 16px;
+  }
+  .spec.dark .row-labels { border-color: rgba(247,239,218,0.12); }
+  .row-label {
+    font-family: var(--b-lat); font-weight: 600;
+    font-size: 11.5px; letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--terracotta);
+    border: 1px solid var(--terracotta);
+    padding: 6px 12px;
+    border-radius: 4px;
+  }
+  .row-label-sec {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.16em;
+    color: var(--ink-mute);
+  }
+  .row-label-num {
+    font-family: var(--b-ar); font-weight: 600;
+    font-size: 15px;
+    color: var(--green);
+    direction: rtl;
+  }
+  .spec.dark .row-label-num { color: var(--saffron-2); }
+
+  /* mini UI snippet */
+  .mini-ui {
+    background: var(--paper-2);
+    border: 1px solid var(--line-dark);
+    border-radius: 18px;
+    padding: 22px 22px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 460px;
+  }
+  .mini-ui .mu-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px; letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--green);
+    background: rgba(31,61,47,0.08);
+    padding: 4px 8px;
+    border-radius: 6px;
+    align-self: flex-start;
+  }
+  .spec.dark .mini-ui .mu-tag {
+    color: var(--saffron-2);
+    background: rgba(193,139,63,0.18);
+  }
+  .mini-ui h4 {
+    font-family: var(--d-ar); font-weight: var(--d-ar-w, 600);
+    font-size: 24px;
+    margin: 0;
+    direction: rtl;
+    line-height: 1.25;
+  }
+  .mini-ui .lat-sub {
+    font-family: var(--d-lat); font-weight: var(--d-lat-w, 500);
+    font-style: italic;
+    font-size: 18px;
+    color: var(--green);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  .spec.dark .mini-ui .lat-sub { color: var(--saffron-2); }
+  .mini-ui .mu-body {
+    font-family: var(--b-ar); font-weight: var(--b-ar-w, 400);
+    font-size: 13.5px; line-height: 1.75; color: var(--ink-soft);
+    direction: rtl;
+    margin: 4px 0 6px;
+  }
+  .spec.dark .mini-ui .mu-body { color: rgba(247,239,218,0.78); }
+  .mini-ui .mu-cta {
+    align-self: flex-start;
+    background: var(--ink); color: var(--paper);
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-family: var(--d-ar); font-weight: 600;
+    font-size: 13px;
+    direction: rtl;
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 4px;
+  }
+  .spec.dark .mini-ui .mu-cta {
+    background: var(--saffron); color: var(--ink);
+  }
+
+  /* ============ FOOTER ============ */
+  footer {
+    position: relative; z-index: 4;
+    padding: 36px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  footer .mark {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 500;
+    font-size: 14px; text-transform: none; letter-spacing: 0; color: var(--ink);
+  }
+  footer .mark span {
+    font-family: 'Reem Kufi', serif; font-style: normal; font-weight: 600;
+    color: var(--terracotta); margin-right: 4px;
+  }
+  footer a {
+    color: var(--terracotta); text-decoration: none;
+  }
+
+  @media (max-width: 1100px) {
+    .spec { grid-template-columns: 1fr; }
+    .spec-meta { position: relative; top: auto; }
+    .row-line, .row-body { grid-template-columns: 1fr; }
+    .head { grid-template-columns: 1fr; padding: 48px 28px; }
+    .index-grid { grid-template-columns: repeat(2, 1fr); }
+    .ix:nth-child(2n) { border-right: none; }
+  }
+  @media (max-width: 720px) {
+    .nav { padding: 18px 22px; }
+    .spec { padding: 40px 22px; }
+    .index { padding: 22px 22px 32px; }
+    .row-big { gap: 24px; }
+    footer { padding: 24px 22px; flex-direction: column; gap: 12px; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="brand">
+    <div class="brand-mark">ب</div>
+    <div class="brand-word">Bazeed<small>Type Specimens · حروف</small></div>
+  </div>
+  <a class="back" href="index.html">← Back to mockups</a>
+</nav>
+
+<!-- HEADER -->
+<header class="head">
+  <div>
+    <span class="eyebrow">Six font directions · Bazeed pharmacy</span>
+    <h1>How should <em>بزيد</em> <br/>sound on the page?</h1>
+    <p class="desc">
+      Each pairing below uses the same Arabic + English sample —
+      logo, tagline, body paragraph, label, and a mini UI card —
+      so the only thing changing is the <b>typography</b>. Pick the
+      direction that fits the brand's voice; everything else (color,
+      spacing, motion) we can keep.
+    </p>
+  </div>
+  <div class="legend">
+    <div>Region</div><div><b>El Beheira · مصر</b></div>
+    <div>Scripts</div><div><b>Arabic + Latin</b></div>
+    <div>Surface</div><div><b>Android · Material You</b></div>
+    <div>Mood</div><div><b>Apothecary · Modern</b></div>
+  </div>
+</header>
+
+<!-- INDEX -->
+<section class="index">
+  <div class="index-title">Index · فهرس</div>
+  <div class="index-grid">
+    <div class="ix">
+      <div class="ix-num">01</div>
+      <div class="ix-name">Modern Editorial</div>
+      <div class="ix-fonts">Fraunces × Reem Kufi · Manrope × Cairo</div>
+    </div>
+    <div class="ix">
+      <div class="ix-num">02</div>
+      <div class="ix-name">Classical Apothecary</div>
+      <div class="ix-fonts">Cormorant × Amiri · Lora × Almarai</div>
+    </div>
+    <div class="ix">
+      <div class="ix-num">03</div>
+      <div class="ix-name">Bold Geometric</div>
+      <div class="ix-fonts">Bricolage × Tajawal · Jakarta × Mada</div>
+    </div>
+    <div class="ix">
+      <div class="ix-num">04</div>
+      <div class="ix-name">Editorial Luxe</div>
+      <div class="ix-fonts">DM Serif × El Messiri · Outfit × Cairo</div>
+    </div>
+    <div class="ix">
+      <div class="ix-num">05</div>
+      <div class="ix-name">Soft Friendly</div>
+      <div class="ix-fonts">Instrument × Almarai · Geist × Cairo</div>
+    </div>
+    <div class="ix">
+      <div class="ix-num">06</div>
+      <div class="ix-name">Bold Display</div>
+      <div class="ix-fonts">Playfair × Lalezar · Manrope × Tajawal</div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECIMEN 01 — Modern Editorial -->
+<section class="spec" style="
+  --d-lat: 'Fraunces', serif; --d-lat-w: 600;
+  --b-lat: 'Manrope', sans-serif; --b-lat-w: 400;
+  --d-ar: 'Reem Kufi', sans-serif; --d-ar-w: 600;
+  --b-ar: 'Cairo', sans-serif; --b-ar-w: 400;
+">
+  <div class="spec-meta">
+    <div class="meta-num">01 — current direction</div>
+    <h2 class="meta-name">Modern <em>Editorial</em></h2>
+    <p class="meta-desc">Fraunces brings warmth and italic charm; Reem Kufi keeps the Arabic geometric and confident. The current concept.</p>
+    <div class="meta-tag">Pairing</div>
+    <div class="meta-credit">
+      <div><b>Display</b> · Fraunces / Reem Kufi</div>
+      <div><b>Body</b> · Manrope / Cairo</div>
+    </div>
+    <div class="meta-vibe">Warm · Characterful · Editorial</div>
+  </div>
+  <div class="spec-body">
+    <div class="row-big">
+      <span class="lat">Bazeed</span>
+      <span class="ar">بزيد</span>
+    </div>
+    <div class="row-line">
+      <span class="lat">Care, <em style="font-style:italic">delivered with intention.</em></span>
+      <span class="ar">رعاية تَعنينا في كلِّ تفصيل.</span>
+    </div>
+    <div class="row-body">
+      <p class="lat">A modern apothecary in the heart of Al Beheira. Bazeed delivers chronic medication on a monthly cadence, every bottle reviewed by a registered pharmacist before it leaves the door.</p>
+      <p class="ar">صيدلية بزيد بدمنهور، نُقدّم خدمة العلاج الشهري لمرضى الأمراض المزمنة مع مراجعة الصيدلي قبل كل إمداد، وتوصيلًا مجانيًا داخل البحيرة.</p>
+    </div>
+    <div class="row-labels">
+      <span class="row-label">Monthly Service · خدمة</span>
+      <span class="row-label-sec">045 333 0 333 · ٢٤/٧</span>
+      <span class="row-label-num">٩ ص — ١٢ م</span>
+    </div>
+    <div class="mini-ui">
+      <span class="mu-tag">Monthly · شهرية</span>
+      <h4>العلاج الشهري</h4>
+      <span class="lat-sub">Care, monthly.</span>
+      <p class="mu-body">يُحضّر الصيدلي علاجك المزمن شهريًا — يُراجَع، يُغلَّف، ويصلك إلى البيت في البحيرة.</p>
+      <a class="mu-cta">اعرف المزيد ←</a>
+    </div>
+  </div>
+</section>
+
+<!-- SPECIMEN 02 — Classical Apothecary -->
+<section class="spec" style="
+  --d-lat: 'Cormorant Garamond', serif; --d-lat-w: 500;
+  --b-lat: 'Lora', serif; --b-lat-w: 400;
+  --d-ar: 'Amiri', serif; --d-ar-w: 700;
+  --b-ar: 'Almarai', sans-serif; --b-ar-w: 400;
+  --d-lat-tracking: -0.005em;
+">
+  <div class="spec-meta">
+    <div class="meta-num">02 — traditional</div>
+    <h2 class="meta-name">Classical <em>Apothecary</em></h2>
+    <p class="meta-desc">Cormorant feels like a 19th-century pharmacy label; Amiri carries centuries of Arabic calligraphic dignity. Quiet, refined, trusted.</p>
+    <div class="meta-tag">Pairing</div>
+    <div class="meta-credit">
+      <div><b>Display</b> · Cormorant Garamond / Amiri</div>
+      <div><b>Body</b> · Lora / Almarai</div>
+    </div>
+    <div class="meta-vibe">Refined · Trusted · Heritage</div>
+  </div>
+  <div class="spec-body">
+    <div class="row-big">
+      <span class="lat" style="font-style: italic;">Bazeed</span>
+      <span class="ar">بزيد</span>
+    </div>
+    <div class="row-line">
+      <span class="lat" style="font-style: italic;">Care, delivered with intention.</span>
+      <span class="ar">رعاية تَعنينا في كلِّ تفصيل.</span>
+    </div>
+    <div class="row-body">
+      <p class="lat">A modern apothecary in the heart of Al Beheira. Bazeed delivers chronic medication on a monthly cadence, every bottle reviewed by a registered pharmacist before it leaves the door.</p>
+      <p class="ar">صيدلية بزيد بدمنهور، نُقدّم خدمة العلاج الشهري لمرضى الأمراض المزمنة مع مراجعة الصيدلي قبل كل إمداد، وتوصيلًا مجانيًا داخل البحيرة.</p>
+    </div>
+    <div class="row-labels">
+      <span class="row-label">Monthly Service · خدمة</span>
+      <span class="row-label-sec">045 333 0 333 · ٢٤/٧</span>
+      <span class="row-label-num">٩ ص — ١٢ م</span>
+    </div>
+    <div class="mini-ui">
+      <span class="mu-tag">Monthly · شهرية</span>
+      <h4>العلاج الشهري</h4>
+      <span class="lat-sub">Care, monthly.</span>
+      <p class="mu-body">يُحضّر الصيدلي علاجك المزمن شهريًا — يُراجَع، يُغلَّف، ويصلك إلى البيت في البحيرة.</p>
+      <a class="mu-cta">اعرف المزيد ←</a>
+    </div>
+  </div>
+</section>
+
+<!-- SPECIMEN 03 — Bold Geometric -->
+<section class="spec dark" style="
+  --d-lat: 'Bricolage Grotesque', sans-serif; --d-lat-w: 700;
+  --b-lat: 'Plus Jakarta Sans', sans-serif; --b-lat-w: 400;
+  --d-ar: 'Tajawal', sans-serif; --d-ar-w: 800;
+  --b-ar: 'Mada', sans-serif; --b-ar-w: 400;
+  --d-lat-tracking: -0.03em;
+">
+  <div class="spec-meta">
+    <div class="meta-num">03 — modern · tech</div>
+    <h2 class="meta-name">Bold <em>Geometric</em></h2>
+    <p class="meta-desc">Bricolage feels engineered and contemporary; Tajawal anchors the Arabic with confident weight. Reads "young, modern pharmacy."</p>
+    <div class="meta-tag">Pairing</div>
+    <div class="meta-credit">
+      <div><b>Display</b> · Bricolage Grotesque / Tajawal</div>
+      <div><b>Body</b> · Plus Jakarta Sans / Mada</div>
+    </div>
+    <div class="meta-vibe">Confident · Tech · Forward</div>
+  </div>
+  <div class="spec-body">
+    <div class="row-big">
+      <span class="lat">Bazeed</span>
+      <span class="ar">بزيد</span>
+    </div>
+    <div class="row-line">
+      <span class="lat">Care, delivered with intention.</span>
+      <span class="ar">رعاية تَعنينا في كلِّ تفصيل.</span>
+    </div>
+    <div class="row-body">
+      <p class="lat">A modern apothecary in the heart of Al Beheira. Bazeed delivers chronic medication on a monthly cadence, every bottle reviewed by a registered pharmacist before it leaves the door.</p>
+      <p class="ar">صيدلية بزيد بدمنهور، نُقدّم خدمة العلاج الشهري لمرضى الأمراض المزمنة مع مراجعة الصيدلي قبل كل إمداد، وتوصيلًا مجانيًا داخل البحيرة.</p>
+    </div>
+    <div class="row-labels">
+      <span class="row-label">Monthly Service · خدمة</span>
+      <span class="row-label-sec">045 333 0 333 · ٢٤/٧</span>
+      <span class="row-label-num">٩ ص — ١٢ م</span>
+    </div>
+    <div class="mini-ui">
+      <span class="mu-tag">Monthly · شهرية</span>
+      <h4>العلاج الشهري</h4>
+      <span class="lat-sub" style="font-style: normal; font-weight: 600;">Care, monthly.</span>
+      <p class="mu-body">يُحضّر الصيدلي علاجك المزمن شهريًا — يُراجَع، يُغلَّف، ويصلك إلى البيت في البحيرة.</p>
+      <a class="mu-cta">اعرف المزيد ←</a>
+    </div>
+  </div>
+</section>
+
+<!-- SPECIMEN 04 — Editorial Luxe -->
+<section class="spec" style="
+  --d-lat: 'DM Serif Display', serif; --d-lat-w: 400;
+  --b-lat: 'Outfit', sans-serif; --b-lat-w: 400;
+  --d-ar: 'El Messiri', sans-serif; --d-ar-w: 700;
+  --b-ar: 'Cairo', sans-serif; --b-ar-w: 400;
+  --d-lat-tracking: -0.02em;
+">
+  <div class="spec-meta">
+    <div class="meta-num">04 — luxurious</div>
+    <h2 class="meta-name">Editorial <em>Luxe</em></h2>
+    <p class="meta-desc">DM Serif Display has high contrast and editorial weight; El Messiri brings a tasteful, modern Arabic feel. Magazine cover energy.</p>
+    <div class="meta-tag">Pairing</div>
+    <div class="meta-credit">
+      <div><b>Display</b> · DM Serif Display / El Messiri</div>
+      <div><b>Body</b> · Outfit / Cairo</div>
+    </div>
+    <div class="meta-vibe">Editorial · Premium · Confident</div>
+  </div>
+  <div class="spec-body">
+    <div class="row-big">
+      <span class="lat">Bazeed</span>
+      <span class="ar">بزيد</span>
+    </div>
+    <div class="row-line">
+      <span class="lat" style="font-style: italic;">Care, delivered with intention.</span>
+      <span class="ar">رعاية تَعنينا في كلِّ تفصيل.</span>
+    </div>
+    <div class="row-body">
+      <p class="lat">A modern apothecary in the heart of Al Beheira. Bazeed delivers chronic medication on a monthly cadence, every bottle reviewed by a registered pharmacist before it leaves the door.</p>
+      <p class="ar">صيدلية بزيد بدمنهور، نُقدّم خدمة العلاج الشهري لمرضى الأمراض المزمنة مع مراجعة الصيدلي قبل كل إمداد، وتوصيلًا مجانيًا داخل البحيرة.</p>
+    </div>
+    <div class="row-labels">
+      <span class="row-label">Monthly Service · خدمة</span>
+      <span class="row-label-sec">045 333 0 333 · ٢٤/٧</span>
+      <span class="row-label-num">٩ ص — ١٢ م</span>
+    </div>
+    <div class="mini-ui">
+      <span class="mu-tag">Monthly · شهرية</span>
+      <h4>العلاج الشهري</h4>
+      <span class="lat-sub" style="font-style: italic;">Care, monthly.</span>
+      <p class="mu-body">يُحضّر الصيدلي علاجك المزمن شهريًا — يُراجَع، يُغلَّف، ويصلك إلى البيت في البحيرة.</p>
+      <a class="mu-cta">اعرف المزيد ←</a>
+    </div>
+  </div>
+</section>
+
+<!-- SPECIMEN 05 — Soft Friendly -->
+<section class="spec" style="
+  --d-lat: 'Instrument Serif', serif; --d-lat-w: 400;
+  --b-lat: 'Geist', sans-serif; --b-lat-w: 400;
+  --d-ar: 'Almarai', sans-serif; --d-ar-w: 800;
+  --b-ar: 'Cairo', sans-serif; --b-ar-w: 400;
+">
+  <div class="spec-meta">
+    <div class="meta-num">05 — approachable</div>
+    <h2 class="meta-name">Soft <em>Friendly</em></h2>
+    <p class="meta-desc">Instrument Serif has a gentle, hand-set quality; Almarai feels round and approachable in Arabic. Calm, modern, neighborhood pharmacy.</p>
+    <div class="meta-tag">Pairing</div>
+    <div class="meta-credit">
+      <div><b>Display</b> · Instrument Serif / Almarai</div>
+      <div><b>Body</b> · Geist / Cairo</div>
+    </div>
+    <div class="meta-vibe">Warm · Calm · Familiar</div>
+  </div>
+  <div class="spec-body">
+    <div class="row-big">
+      <span class="lat" style="font-style: italic;">Bazeed</span>
+      <span class="ar">بزيد</span>
+    </div>
+    <div class="row-line">
+      <span class="lat" style="font-style: italic;">Care, delivered with intention.</span>
+      <span class="ar">رعاية تَعنينا في كلِّ تفصيل.</span>
+    </div>
+    <div class="row-body">
+      <p class="lat">A modern apothecary in the heart of Al Beheira. Bazeed delivers chronic medication on a monthly cadence, every bottle reviewed by a registered pharmacist before it leaves the door.</p>
+      <p class="ar">صيدلية بزيد بدمنهور، نُقدّم خدمة العلاج الشهري لمرضى الأمراض المزمنة مع مراجعة الصيدلي قبل كل إمداد، وتوصيلًا مجانيًا داخل البحيرة.</p>
+    </div>
+    <div class="row-labels">
+      <span class="row-label">Monthly Service · خدمة</span>
+      <span class="row-label-sec">045 333 0 333 · ٢٤/٧</span>
+      <span class="row-label-num">٩ ص — ١٢ م</span>
+    </div>
+    <div class="mini-ui">
+      <span class="mu-tag">Monthly · شهرية</span>
+      <h4>العلاج الشهري</h4>
+      <span class="lat-sub" style="font-style: italic;">Care, monthly.</span>
+      <p class="mu-body">يُحضّر الصيدلي علاجك المزمن شهريًا — يُراجَع، يُغلَّف، ويصلك إلى البيت في البحيرة.</p>
+      <a class="mu-cta">اعرف المزيد ←</a>
+    </div>
+  </div>
+</section>
+
+<!-- SPECIMEN 06 — Bold Display -->
+<section class="spec dark" style="
+  --d-lat: 'Playfair Display', serif; --d-lat-w: 700;
+  --b-lat: 'Manrope', sans-serif; --b-lat-w: 400;
+  --d-ar: 'Lalezar', sans-serif; --d-ar-w: 400;
+  --b-ar: 'Tajawal', sans-serif; --b-ar-w: 400;
+  --d-lat-tracking: -0.02em;
+">
+  <div class="spec-meta">
+    <div class="meta-num">06 — high contrast</div>
+    <h2 class="meta-name">Bold <em>Display</em></h2>
+    <p class="meta-desc">Playfair's sharp contrast paired with Lalezar's poster-like Arabic creates real billboard energy. Strongest brand presence of the six.</p>
+    <div class="meta-tag">Pairing</div>
+    <div class="meta-credit">
+      <div><b>Display</b> · Playfair Display / Lalezar</div>
+      <div><b>Body</b> · Manrope / Tajawal</div>
+    </div>
+    <div class="meta-vibe">Loud · Dramatic · Memorable</div>
+  </div>
+  <div class="spec-body">
+    <div class="row-big">
+      <span class="lat" style="font-style: italic;">Bazeed</span>
+      <span class="ar">بزيد</span>
+    </div>
+    <div class="row-line">
+      <span class="lat" style="font-style: italic;">Care, delivered with intention.</span>
+      <span class="ar">رعاية تَعنينا في كلِّ تفصيل.</span>
+    </div>
+    <div class="row-body">
+      <p class="lat">A modern apothecary in the heart of Al Beheira. Bazeed delivers chronic medication on a monthly cadence, every bottle reviewed by a registered pharmacist before it leaves the door.</p>
+      <p class="ar">صيدلية بزيد بدمنهور، نُقدّم خدمة العلاج الشهري لمرضى الأمراض المزمنة مع مراجعة الصيدلي قبل كل إمداد، وتوصيلًا مجانيًا داخل البحيرة.</p>
+    </div>
+    <div class="row-labels">
+      <span class="row-label">Monthly Service · خدمة</span>
+      <span class="row-label-sec">045 333 0 333 · ٢٤/٧</span>
+      <span class="row-label-num">٩ ص — ١٢ م</span>
+    </div>
+    <div class="mini-ui">
+      <span class="mu-tag">Monthly · شهرية</span>
+      <h4>العلاج الشهري</h4>
+      <span class="lat-sub" style="font-style: italic; font-weight: 700;">Care, monthly.</span>
+      <p class="mu-body">يُحضّر الصيدلي علاجك المزمن شهريًا — يُراجَع، يُغلَّف، ويصلك إلى البيت في البحيرة.</p>
+      <a class="mu-cta">اعرف المزيد ←</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="mark"><span>بزيد</span> · Bazeed · type explorations</div>
+  <div>← <a href="index.html">Back to mockups</a> · or pick a direction</div>
+</footer>
+
+</body>
+</html>

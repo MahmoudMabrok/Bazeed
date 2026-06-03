@@ -1,0 +1,13 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Simplified "B" logo for Bazeed -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M30,25 h30 c15,0 15,20 0,20 h-30 v-20 M30,45 h35 c15,0 15,25 0,25 h-35 v-25" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M30,25 v60 h8 v-60 z" />
+</vector>

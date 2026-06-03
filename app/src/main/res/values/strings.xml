@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Bazeed</string>
+    <string name="notification_channel_general_name">General</string>
+    <string name="notification_channel_general_description">General app notifications</string>
+</resources>
