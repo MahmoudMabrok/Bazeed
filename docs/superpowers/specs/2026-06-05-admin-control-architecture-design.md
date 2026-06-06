@@ -359,3 +359,31 @@ Manual / instrumentation:
 - The first admin is seeded manually (console) as described.
 - Push notifications continue to be sent from the Firebase Console (FCM baseline); programmatic admin-initiated push is a later, separate effort and intentionally not part of this design (no server key in-app).
 - Existing `SampleData.kt` content remains as-is until a separate Firestore migration task.
+
+## Implementation progress
+
+Tracked here so work can resume across PRs/sessions.
+
+### Done (this PR — client-only scaffold)
+- [x] `customer` + `admin` product flavors (`flavorDimensions = "audience"`) in `app/build.gradle.kts`.
+- [x] Flavor source sets created; existing customer screens + nav + bottom bar **moved** `main → customer`.
+- [x] Admin code lives only in `src/admin` (never compiled into the customer APK).
+- [x] Shared auth layer in `main`: `AuthUser`/`UserRole`, `AuthRepository`/`UserRepository` interfaces, `AuthException`.
+- [x] Local (client-only) impls: `LocalUserStore` (seeded admin + customer), `LocalAuthRepository`, `LocalUserRepository`.
+- [x] Single wiring point: `data/Repositories.kt` (swap to Firebase here later).
+- [x] Shared `LoginScreen` (email + password).
+- [x] Customer flavor: login gate → existing shell + sign-out.
+- [x] Admin flavor: login → role gate (`NotAuthorizedScreen`) → `AdminDashboard` / `CreateUser` / `UserList`.
+- [x] Admin app label override (`بازيد — الإدارة`).
+
+**Seed credentials (local store, dev only):** admin `admin@bazeed.app` / `admin123`; customer `user@bazeed.app` / `user123`.
+
+### Not yet (follow-up PRs)
+- [ ] **Build prerequisite:** register a second Firebase Android app for `tools.mo3ta.bazeed.admin` and regenerate `google-services.json` with both clients (the file is gitignored; the `admin` flavor won't assemble until this exists locally/CI).
+- [ ] Persist the local store across launches (DataStore) — currently in-memory only.
+- [ ] Firebase impls behind the same interfaces (`FirebaseAuthRepository`, `FirestoreUserRepository`) + flip `Repositories.kt`.
+- [ ] `firestore.rules` deployment (rules already specified above).
+- [ ] First-admin bootstrap procedure (manual, console) once Firebase is wired.
+- [ ] "Forgot password" / admin-triggered password reset.
+- [ ] Migrate `SampleData.kt` content into the content repository.
+- [ ] Verify customer APK excludes admin classes (dex inspection) once buildable.

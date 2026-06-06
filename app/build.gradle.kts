@@ -22,6 +22,19 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    flavorDimensions += "audience"
+    productFlavors {
+        create("customer") {
+            dimension = "audience"
+            applicationId = "tools.mo3ta.bazeed"
+        }
+        create("admin") {
+            dimension = "audience"
+            applicationId = "tools.mo3ta.bazeed.admin"
+            versionNameSuffix = "-admin"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
