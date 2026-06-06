@@ -1,19 +1,32 @@
 package tools.mo3ta.bazeed.data
 
+import android.content.Context
 import tools.mo3ta.bazeed.data.repo.AuthRepository
 import tools.mo3ta.bazeed.data.repo.UserRepository
-import tools.mo3ta.bazeed.data.repo.local.LocalAuthRepository
-import tools.mo3ta.bazeed.data.repo.local.LocalUserRepository
+import tools.mo3ta.bazeed.data.repo.firebase.FirebaseAuthRepository
+import tools.mo3ta.bazeed.data.repo.firebase.FirestoreUserRepository
 
 /**
- * The one place repository implementations are chosen. Client-only today.
+ * The one place repository implementations are chosen. Must be initialized once
+ * from [tools.mo3ta.bazeed.BazeedApp.onCreate] before any screen reads it.
  *
- * To move to Firebase later, swap these two lines for the Firebase
- * implementations (e.g. `FirebaseAuthRepository()` / `FirestoreUserRepository()`)
- * — no screen or flavor code changes, because everything depends on the
- * interfaces in [tools.mo3ta.bazeed.data.repo].
+ * Currently wired to the Firebase (client-only, no Cloud Functions) impls. To
+ * fall back to the local in-memory impls (e.g. for UI work without Firebase),
+ * swap the two assignments in [init] for `LocalAuthRepository()` /
+ * `LocalUserRepository()` — no screen or flavor code changes.
  */
 object Repositories {
-    val auth: AuthRepository = LocalAuthRepository()
-    val users: UserRepository = LocalUserRepository()
+
+    lateinit var auth: AuthRepository
+        private set
+
+    lateinit var users: UserRepository
+        private set
+
+    fun init(context: Context) {
+        if (::auth.isInitialized) return
+        val appContext = context.applicationContext
+        auth = FirebaseAuthRepository()
+        users = FirestoreUserRepository(appContext)
+    }
 }

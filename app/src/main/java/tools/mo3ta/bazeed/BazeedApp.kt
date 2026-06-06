@@ -4,11 +4,13 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import androidx.core.app.NotificationManagerCompat
+import tools.mo3ta.bazeed.data.Repositories
 
 class BazeedApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        Repositories.init(this)
         createDefaultNotificationChannel()
     }
 

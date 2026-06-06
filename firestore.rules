@@ -1,0 +1,50 @@
+rules_version = '2';
+
+// Bazeed Firestore Security Rules — authorization for the admin-provisioned model.
+//
+// Authorization lives here (NOT in app code): roles are read from each user's
+// `users/{uid}` document. A signed-in account with no such document is treated
+// as unprovisioned and can read nothing; only an admin may create user/role
+// documents, so a self-registered Auth account can never escalate.
+service cloud.firestore {
+  match /databases/{db}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userDoc(uid) {
+      return get(/databases/$(db)/documents/users/$(uid)).data;
+    }
+
+    function isProvisioned() {
+      return isSignedIn()
+          && exists(/databases/$(db)/documents/users/$(request.auth.uid));
+    }
+
+    function isAdmin() {
+      return isProvisioned()
+          && userDoc(request.auth.uid).role == 'admin'
+          && userDoc(request.auth.uid).active == true;
+    }
+
+    // User / role documents: only admins manage them; a user may read their own.
+    match /users/{uid} {
+      allow read: if isAdmin() || request.auth.uid == uid;
+      // create requires isAdmin() => a rogue self-registered Auth account
+      // cannot mint its own role doc, so it can never become admin.
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Content: provisioned users read; only admins write.
+    match /announcements/{id} {
+      allow read: if isProvisioned();
+      allow write: if isAdmin();
+    }
+
+    match /config/{doc} {
+      allow read: if isProvisioned();
+      allow write: if isAdmin();
+    }
+  }
+}
