@@ -33,9 +33,16 @@ jobs:
       - name: Build debug APK
         run: ./gradlew assembleDebug --no-daemon --stacktrace
 
-      - name: Upload debug APK
+      - name: Upload customer debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug
-          path: app/build/outputs/apk/*/debug/*.apk
+          name: app-customer-debug
+          path: app/build/outputs/apk/customer/debug/*.apk
+          if-no-files-found: error
+
+      - name: Upload admin debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-admin-debug
+          path: app/build/outputs/apk/admin/debug/*.apk
           if-no-files-found: error
