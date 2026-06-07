@@ -1,0 +1,17 @@
+{
+  "name": "bazeed-announcements-scripts",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Scheduled GitHub Action scripts for Bazeed announcements (FCM fan-out + expiry cleanup).",
+  "scripts": {
+    "notify": "node notify.mjs",
+    "cleanup": "node cleanup.mjs"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.7.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
