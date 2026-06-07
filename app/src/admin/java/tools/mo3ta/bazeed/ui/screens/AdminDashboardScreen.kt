@@ -22,6 +22,7 @@ fun AdminDashboardScreen(
     admin: AuthUser,
     onCreateUser: () -> Unit,
     onViewUsers: () -> Unit,
+    onManageAnnouncements: () -> Unit,
     onSignOut: () -> Unit,
 ) {
     Column(
@@ -48,6 +49,9 @@ fun AdminDashboardScreen(
         }
         OutlinedButton(onClick = onViewUsers, modifier = Modifier.fillMaxWidth()) {
             Text("قائمة المستخدمين")
+        }
+        OutlinedButton(onClick = onManageAnnouncements, modifier = Modifier.fillMaxWidth()) {
+            Text("إدارة الإعلانات")
         }
 
         Spacer(Modifier.height(8.dp))
