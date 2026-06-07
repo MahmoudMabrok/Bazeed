@@ -11,6 +11,7 @@ import kotlinx.coroutines.tasks.await
 import tools.mo3ta.bazeed.data.Announcement
 import tools.mo3ta.bazeed.data.AnnouncementType
 import tools.mo3ta.bazeed.data.repo.ContentRepository
+import tools.mo3ta.bazeed.util.Logger
 
 /**
  * Production ContentRepository backed by Firestore /announcements collection.
@@ -32,11 +33,15 @@ class FirestoreContentRepository(
     override val announcements: StateFlow<List<Announcement>> = _announcements.asStateFlow()
 
     init {
-        // Live snapshot. Sorted server-side by createdAt desc; rules filter by isProvisioned.
+        // Live snapshot. Sorted server-side by createdAt desc; rules allow public read.
         collection
             .orderBy("createdAt", Query.Direction.DESCENDING)
             .addSnapshotListener { snap, err ->
-                if (err != null || snap == null) return@addSnapshotListener
+                if (err != null) {
+                    Logger.w(TAG, "announcements snapshot failed", err)
+                    return@addSnapshotListener
+                }
+                if (snap == null) return@addSnapshotListener
                 _announcements.value = snap.documents.mapNotNull { it.toAnnouncementOrNull() }
             }
     }
@@ -70,6 +75,10 @@ class FirestoreContentRepository(
     override suspend fun delete(id: String): Result<Unit> = runCatching {
         collection.document(id).delete().await()
         Unit
+    }
+
+    private companion object {
+        private const val TAG = "FirestoreContentRepo"
     }
 
     private fun com.google.firebase.firestore.DocumentSnapshot.toAnnouncementOrNull(): Announcement? {

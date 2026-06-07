@@ -4,19 +4,11 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Logout
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,16 +19,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import tools.mo3ta.bazeed.data.Repositories
 import tools.mo3ta.bazeed.data.SampleData
 import tools.mo3ta.bazeed.messaging.FcmTopics
-import tools.mo3ta.bazeed.ui.auth.LoginScreen
 import tools.mo3ta.bazeed.ui.components.BazeedBottomNav
 import tools.mo3ta.bazeed.ui.screens.AnnouncementsScreen
 import tools.mo3ta.bazeed.ui.screens.ContactScreen
 import tools.mo3ta.bazeed.ui.screens.HomeScreen
 import tools.mo3ta.bazeed.ui.screens.MonthlyServiceScreen
-import tools.mo3ta.bazeed.ui.theme.Ink
 import tools.mo3ta.bazeed.ui.theme.Sand
 
 enum class BazeedDestination(val route: String) {
@@ -50,20 +39,15 @@ enum class BazeedDestination(val route: String) {
     }
 }
 
-/** Customer flavor entry point: login gate → customer shell. */
+/** Customer flavor entry point: customer shell (no login required). */
 @Composable
 fun BazeedAppRoot() {
     LaunchedEffect(Unit) { FcmTopics.subscribeAnnouncements() }
-    val user by Repositories.auth.currentUser.collectAsState()
-    if (user == null) {
-        LoginScreen(title = "صيدلية بازيد", subtitle = "تسجيل الدخول")
-    } else {
-        CustomerShell(onSignOut = { Repositories.auth.signOut() })
-    }
+    CustomerShell()
 }
 
 @Composable
-private fun CustomerShell(onSignOut: () -> Unit) {
+private fun CustomerShell() {
     val navController = rememberNavController()
     val backStack by navController.currentBackStackEntryAsState()
     val current = BazeedDestination.fromRoute(backStack?.destination?.route)
@@ -112,20 +96,6 @@ private fun CustomerShell(onSignOut: () -> Unit) {
                         onDirections = { context.openMaps(SampleData.pharmacy.streetAr) }
                     )
                 }
-            }
-
-            // Lightweight sign-out affordance (scaffold-level; refine placement later).
-            IconButton(
-                onClick = onSignOut,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .windowInsetsPadding(WindowInsets.statusBars)
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.Logout,
-                    contentDescription = "تسجيل الخروج",
-                    tint = Ink
-                )
             }
         }
     }

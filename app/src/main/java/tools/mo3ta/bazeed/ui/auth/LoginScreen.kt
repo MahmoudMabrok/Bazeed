@@ -1,6 +1,6 @@
 package tools.mo3ta.bazeed.ui.auth
 
-import android.util.Log
+import tools.mo3ta.bazeed.util.Logger
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -97,7 +97,7 @@ fun LoginScreen(
         Spacer(Modifier.height(28.dp))
         Button(
             onClick = {
-                Log.d(TAG, "signIn attempt: $email")
+                Logger.d(TAG, "signIn attempt: $email")
                 loading = true
                 error = null
                 scope.launch {
@@ -105,17 +105,17 @@ fun LoginScreen(
                     loading = false
                     result.fold(
                         onSuccess = { user ->
-                            Log.d(TAG, "signed in as ${user.uid}")
+                            Logger.d(TAG, "signed in as ${user.uid}")
                             // currentUser flips → app root re-routes
                         },
                         onFailure = { throwable ->
                             error = when (throwable) {
                                 is AuthException -> {
-                                    Log.w(TAG, "signIn failed: ${throwable::class.simpleName}")
+                                    Logger.w(TAG, "signIn failed: ${throwable::class.simpleName}")
                                     throwable
                                 }
                                 else -> {
-                                    Log.e(TAG, "unexpected signIn throw", throwable)
+                                    Logger.e(TAG, "unexpected signIn throw", throwable)
                                     AuthException.Unknown(throwable)
                                 }
                             }

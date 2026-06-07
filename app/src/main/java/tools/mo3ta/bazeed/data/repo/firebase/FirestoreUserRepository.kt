@@ -1,7 +1,6 @@
 package tools.mo3ta.bazeed.data.repo.firebase
 
 import android.content.Context
-import android.util.Log
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.FirebaseOptions
@@ -18,6 +17,7 @@ import tools.mo3ta.bazeed.data.auth.AuthUser
 import tools.mo3ta.bazeed.data.auth.UserRole
 import tools.mo3ta.bazeed.data.repo.AuthException
 import tools.mo3ta.bazeed.data.repo.UserRepository
+import tools.mo3ta.bazeed.util.Logger
 
 private const val TAG = "FirestoreUsers"
 private const val SECONDARY_APP_NAME = "userProvisioning"
@@ -44,13 +44,13 @@ class FirestoreUserRepository(
             .addSnapshotListener { snap, err ->
                 if (err != null) {
                     // Non-admin sessions fail here by design (rules deny collection read).
-                    Log.d(TAG, "users listener stopped: ${err.message}")
+                    Logger.d(TAG, "users listener stopped: ${err.message}")
                     _users.value = emptyList()
                     return@addSnapshotListener
                 }
                 if (snap == null) return@addSnapshotListener
                 _users.value = snap.documents.mapNotNull { it.toAuthUserOrNull() }
-                Log.d(TAG, "users snapshot updated: ${_users.value.size} entries")
+                Logger.d(TAG, "users snapshot updated: ${_users.value.size} entries")
             }
     }
 
@@ -60,14 +60,14 @@ class FirestoreUserRepository(
         displayName: String,
         role: UserRole,
     ): Result<AuthUser> {
-        Log.d(TAG, "createUser attempt: $email (role=$role)")
+        Logger.d(TAG, "createUser attempt: $email (role=$role)")
         val trimmed = email.trim()
         if (trimmed.isBlank() || !trimmed.contains("@")) {
-            Log.w(TAG, "createUser failed: Validation (bad email)")
+            Logger.w(TAG, "createUser failed: Validation (bad email)")
             return Result.failure(AuthException.Validation("بريد إلكتروني غير صالح"))
         }
         if (password.length < 6) {
-            Log.w(TAG, "createUser failed: Validation (short password)")
+            Logger.w(TAG, "createUser failed: Validation (short password)")
             return Result.failure(AuthException.Validation("كلمة المرور يجب ألا تقل عن ٦ أحرف"))
         }
 
@@ -75,7 +75,7 @@ class FirestoreUserRepository(
             val secondaryAuth = FirebaseAuth.getInstance(secondaryApp())
             val result = secondaryAuth.createUserWithEmailAndPassword(trimmed, password).await()
             val newUid = result.user?.uid ?: error("Firebase returned null user on createUser")
-            Log.d(TAG, "createUser auth ok: $newUid")
+            Logger.d(TAG, "createUser auth ok: $newUid")
 
             try {
                 firestore.collection("users").document(newUid).set(
@@ -89,13 +89,13 @@ class FirestoreUserRepository(
                     )
                 ).await()
             } catch (t: Throwable) {
-                Log.e(TAG, "createUser doc write failed; orphan auth uid=$newUid", t)
+                Logger.e(TAG, "createUser doc write failed; orphan auth uid=$newUid", t)
                 secondaryAuth.signOut()
                 throw t
             }
 
             secondaryAuth.signOut()
-            Log.d(TAG, "createUser ok: $newUid")
+            Logger.d(TAG, "createUser ok: $newUid")
             AuthUser(
                 uid = newUid,
                 email = trimmed,
@@ -145,7 +145,7 @@ class FirestoreUserRepository(
         is FirebaseAuthUserCollisionException -> AuthException.EmailInUse()
         is FirebaseNetworkException -> AuthException.Network()
         else -> {
-            Log.e(TAG, "unexpected createUser throwable", t)
+            Logger.e(TAG, "unexpected createUser throwable", t)
             AuthException.Unknown(t)
         }
     }

@@ -20,10 +20,10 @@ service cloud.firestore {
       allow create, update, delete: if isAdmin();
     }
 
-    // Announcements: provisioned users read; only admins write.
+    // Announcements: public read (customers are not signed in); only admins write.
     // The 'notified' field is flipped by the GH Action's Admin SDK (bypasses rules).
     match /announcements/{id} {
-      allow read:  if isProvisioned();
+      allow read:  if true;
       allow write: if isAdmin();
     }
 

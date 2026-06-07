@@ -1,7 +1,7 @@
 package tools.mo3ta.bazeed.messaging
 
-import android.util.Log
 import com.google.firebase.messaging.FirebaseMessaging
+import tools.mo3ta.bazeed.util.Logger
 
 /**
  * Customer-only FCM topic subscriptions. The admin flavor has no equivalent
@@ -18,8 +18,8 @@ object FcmTopics {
     fun subscribeAnnouncements() {
         FirebaseMessaging.getInstance().subscribeToTopic(ANNOUNCEMENTS)
             .addOnCompleteListener { task ->
-                if (task.isSuccessful) Log.d(TAG, "subscribed to $ANNOUNCEMENTS")
-                else Log.w(TAG, "subscribe failed", task.exception)
+                if (task.isSuccessful) Logger.d(TAG, "subscribed to $ANNOUNCEMENTS")
+                else Logger.w(TAG, "subscribe failed", task.exception)
             }
     }
 }

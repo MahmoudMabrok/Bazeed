@@ -1,6 +1,6 @@
 package tools.mo3ta.bazeed.data.repo.local
 
-import android.util.Log
+import tools.mo3ta.bazeed.util.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,23 +19,23 @@ class LocalAuthRepository : AuthRepository {
     override val currentUser: StateFlow<AuthUser?> = _currentUser.asStateFlow()
 
     override suspend fun signIn(email: String, password: String): Result<AuthUser> {
-        Log.d(TAG, "signIn attempt: $email")
+        Logger.d(TAG, "signIn attempt: $email")
         if (email.isBlank() || password.isBlank()) {
-            Log.w(TAG, "signIn failed: Validation (empty fields)")
+            Logger.w(TAG, "signIn failed: Validation (empty fields)")
             return Result.failure(AuthException.Validation("من فضلك أدخل البريد وكلمة المرور"))
         }
         val user = LocalUserStore.verify(email, password)
         if (user == null) {
-            Log.w(TAG, "signIn failed: InvalidCredentials for $email")
+            Logger.w(TAG, "signIn failed: InvalidCredentials for $email")
             return Result.failure(AuthException.InvalidCredentials())
         }
         _currentUser.value = user
-        Log.d(TAG, "signed in as ${user.uid} (${user.role})")
+        Logger.d(TAG, "signed in as ${user.uid} (${user.role})")
         return Result.success(user)
     }
 
     override fun signOut() {
-        Log.d(TAG, "signOut")
+        Logger.d(TAG, "signOut")
         _currentUser.value = null
     }
 }
@@ -51,18 +51,18 @@ class LocalUserRepository : UserRepository {
         displayName: String,
         role: UserRole,
     ): Result<AuthUser> {
-        Log.d(TAG, "createUser attempt: $email (role=$role)")
+        Logger.d(TAG, "createUser attempt: $email (role=$role)")
         val trimmed = email.trim()
         if (trimmed.isBlank() || !trimmed.contains("@")) {
-            Log.w(TAG, "createUser failed: Validation (bad email)")
+            Logger.w(TAG, "createUser failed: Validation (bad email)")
             return Result.failure(AuthException.Validation("بريد إلكتروني غير صالح"))
         }
         if (password.length < 6) {
-            Log.w(TAG, "createUser failed: Validation (short password)")
+            Logger.w(TAG, "createUser failed: Validation (short password)")
             return Result.failure(AuthException.Validation("كلمة المرور يجب ألا تقل عن ٦ أحرف"))
         }
         if (LocalUserStore.exists(trimmed)) {
-            Log.w(TAG, "createUser failed: EmailInUse for $trimmed")
+            Logger.w(TAG, "createUser failed: EmailInUse for $trimmed")
             return Result.failure(AuthException.EmailInUse())
         }
         val user = AuthUser(
@@ -72,7 +72,7 @@ class LocalUserRepository : UserRepository {
             role = role,
         )
         LocalUserStore.register(user, password)
-        Log.d(TAG, "createUser ok: ${user.uid}")
+        Logger.d(TAG, "createUser ok: ${user.uid}")
         return Result.success(user)
     }
 }

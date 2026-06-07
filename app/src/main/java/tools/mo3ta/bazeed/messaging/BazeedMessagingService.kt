@@ -2,7 +2,6 @@ package tools.mo3ta.bazeed.messaging
 
 import android.app.PendingIntent
 import android.content.Intent
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -10,11 +9,12 @@ import com.google.firebase.messaging.RemoteMessage
 import tools.mo3ta.bazeed.BazeedApp
 import tools.mo3ta.bazeed.MainActivity
 import tools.mo3ta.bazeed.R
+import tools.mo3ta.bazeed.util.Logger
 
 class BazeedMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
-        Log.d(TAG_TOKEN, token)
+        Logger.d(TAG_TOKEN, token)
     }
 
     override fun onMessageReceived(message: RemoteMessage) {

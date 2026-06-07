@@ -1,6 +1,5 @@
 package tools.mo3ta.bazeed.data.repo.firebase
 
-import android.util.Log
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
@@ -19,6 +18,7 @@ import tools.mo3ta.bazeed.data.auth.AuthUser
 import tools.mo3ta.bazeed.data.auth.UserRole
 import tools.mo3ta.bazeed.data.repo.AuthException
 import tools.mo3ta.bazeed.data.repo.AuthRepository
+import tools.mo3ta.bazeed.util.Logger
 
 private const val TAG = "FirebaseAuth"
 
@@ -47,20 +47,20 @@ class FirebaseAuthRepository(
         auth.addAuthStateListener { fb ->
             val fbUser = fb.currentUser
             if (fbUser == null) {
-                Log.d(TAG, "authState: signed out")
+                Logger.d(TAG, "authState: signed out")
                 _currentUser.value = null
             } else {
-                Log.d(TAG, "authState: signed in as ${fbUser.uid}")
+                Logger.d(TAG, "authState: signed in as ${fbUser.uid}")
                 scope.launch { refreshFromUserDoc(fbUser.uid, fbUser.email.orEmpty()) }
             }
         }
     }
 
     override suspend fun signIn(email: String, password: String): Result<AuthUser> {
-        Log.d(TAG, "signIn attempt: $email")
+        Logger.d(TAG, "signIn attempt: $email")
         val trimmed = email.trim()
         if (trimmed.isBlank() || password.isBlank()) {
-            Log.w(TAG, "signIn failed: Validation (empty fields)")
+            Logger.w(TAG, "signIn failed: Validation (empty fields)")
             return Result.failure(AuthException.Validation("من فضلك أدخل البريد وكلمة المرور"))
         }
         return runCatching {
@@ -68,18 +68,18 @@ class FirebaseAuthRepository(
             val uid = cred.user?.uid ?: error("Firebase returned null user")
             val authUser = readUserDoc(uid, trimmed)
             if (authUser == null) {
-                Log.w(TAG, "signIn failed: UserNotProvisioned uid=$uid")
+                Logger.w(TAG, "signIn failed: UserNotProvisioned uid=$uid")
                 auth.signOut()
                 throw AuthException.UserNotProvisioned()
             }
             _currentUser.value = authUser
-            Log.d(TAG, "signIn ok: ${authUser.uid} (${authUser.role})")
+            Logger.d(TAG, "signIn ok: ${authUser.uid} (${authUser.role})")
             authUser
         }.recoverCatching { throw mapException(it) }
     }
 
     override fun signOut() {
-        Log.d(TAG, "signOut")
+        Logger.d(TAG, "signOut")
         auth.signOut()
     }
 
@@ -88,13 +88,13 @@ class FirebaseAuthRepository(
         try {
             val authUser = readUserDoc(uid, fallbackEmail)
             if (authUser == null) {
-                Log.e(TAG, "users/$uid missing or unparseable; treating as signed out")
+                Logger.e(TAG, "users/$uid missing or unparseable; treating as signed out")
                 _currentUser.value = null
             } else {
                 _currentUser.value = authUser
             }
         } catch (t: Throwable) {
-            Log.e(TAG, "users/$uid read failed; treating as signed out", t)
+            Logger.e(TAG, "users/$uid read failed; treating as signed out", t)
             _currentUser.value = null
         }
     }
@@ -124,7 +124,7 @@ class FirebaseAuthRepository(
         is FirebaseNetworkException -> AuthException.Network()
         is FirebaseTooManyRequestsException -> AuthException.TooManyAttempts()
         else -> {
-            Log.e(TAG, "unexpected signIn throwable", t)
+            Logger.e(TAG, "unexpected signIn throwable", t)
             AuthException.Unknown(t)
         }
     }
