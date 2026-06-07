@@ -14,3 +14,8 @@ local.properties
 *.aab
 output.json
 app/google-services.json
+
+# Release signing — never commit
+keystore.properties
+*.jks
+*.keystore

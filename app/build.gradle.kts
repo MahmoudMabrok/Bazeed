@@ -1,8 +1,18 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.services)
 }
+
+val keystoreProperties = Properties().apply {
+    val file = rootProject.file("keystore.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+
+fun keystoreValue(key: String, envKey: String): String? =
+    keystoreProperties.getProperty(key) ?: System.getenv(envKey)
 
 android {
     namespace = "tools.mo3ta.bazeed"
@@ -35,13 +45,29 @@ android {
         }
     }
 
+    signingConfigs {
+        create("release") {
+            val storePath = keystoreValue("storeFile", "RELEASE_STORE_FILE")
+            if (!storePath.isNullOrBlank()) {
+                storeFile = rootProject.file(storePath)
+                storePassword = keystoreValue("storePassword", "RELEASE_STORE_PASSWORD")
+                keyAlias = keystoreValue("keyAlias", "RELEASE_KEY_ALIAS")
+                keyPassword = keystoreValue("keyPassword", "RELEASE_KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfigs.getByName("release").storeFile?.let {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
     compileOptions {
