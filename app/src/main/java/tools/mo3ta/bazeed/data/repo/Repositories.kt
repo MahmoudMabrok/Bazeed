@@ -42,8 +42,26 @@ interface UserRepository {
     ): Result<AuthUser>
 }
 
-/** Thrown by repositories for recoverable auth/validation failures. */
-class AuthException(message: String) : Exception(message)
+/**
+ * Recoverable auth / user-management failures. Each case carries a ready-to-show
+ * Arabic [userMessage] so screens don't need to decode strings to pick a UX.
+ * [Unknown] preserves the original [cause] for logging.
+ */
+sealed class AuthException(
+    val userMessage: String,
+    cause: Throwable? = null,
+) : Exception(userMessage, cause) {
+
+    class Validation(message: String) : AuthException(message)
+    class InvalidCredentials : AuthException("بيانات الدخول غير صحيحة")
+    class UserNotProvisioned : AuthException("الحساب غير مفعّل — تواصل مع الإدارة")
+    class NotAuthorized : AuthException("هذا الحساب غير مصرّح له بالدخول إلى لوحة الإدارة")
+    class Network : AuthException("تعذّر الاتصال — تحقق من الإنترنت")
+    class TooManyAttempts : AuthException("محاولات كثيرة، حاول لاحقاً")
+    class EmailInUse : AuthException("هذا البريد مسجّل بالفعل")
+    class Unknown(cause: Throwable)
+        : AuthException("حدث خطأ غير متوقع، حاول مرة أخرى", cause)
+}
 
 /**
  * Announcement CRUD. Admin app writes; customer app reads via a live snapshot.
