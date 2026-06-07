@@ -379,7 +379,7 @@ These are environment/config steps that must be done before this feature works e
 - The 4-category `type` enum (Health/Alert/Tip/Offer) is the right taxonomy. If you want a different set, the enum rename is one place.
 - Time-ago label rendering is good enough as "الآن" / "منذ ساعة" / "أمس" / "منذ ٣ أيام" (no exact timestamps). If precise dates are wanted, swap for a localized formatter.
 - The customer's expectations around push timing are "within minutes, not seconds." 5-minute polling is fine. If we need real-time, the only fix without Cloud Functions is to also embed a service account in the admin APK — explicitly not the choice we made.
-- GH Actions free tier comfortably absorbs the polling load (~8,640 runs/month at every 5 min; free tier is 2,000 min/month and each run is ~30s).
+- **GH Actions billing.** Public-repo Actions usage is unlimited. **Private-repo free tier is 2,000 min/month**, and at every-5-min the notify workflow will run ~8,640 times/month at ~30–60s each (~4,300+ min/month) — that **exceeds** the free tier on a private repo. If the repo is private, either (a) drop the notify cron to every 15 min (~1,400 min/month, fits), (b) accept paid Actions minutes, or (c) make the repo public (it already contains no secrets — `google-services.json` is gitignored and the service account is in GH Secrets). Cleanup workflow cost is negligible either way.
 
 ## Out of scope
 
