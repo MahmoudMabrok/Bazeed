@@ -7,12 +7,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccessTime
@@ -30,10 +28,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import tools.mo3ta.bazeed.data.Announcement
-import tools.mo3ta.bazeed.data.AnnouncementCategory
+import tools.mo3ta.bazeed.data.AnnouncementType
+import tools.mo3ta.bazeed.data.TimeAgo
 import tools.mo3ta.bazeed.ui.theme.Almarai
 import tools.mo3ta.bazeed.ui.theme.Amiri
 import tools.mo3ta.bazeed.ui.theme.Green
@@ -43,19 +43,17 @@ import tools.mo3ta.bazeed.ui.theme.InkMute
 import tools.mo3ta.bazeed.ui.theme.LineSoft
 import tools.mo3ta.bazeed.ui.theme.Mint
 import tools.mo3ta.bazeed.ui.theme.Mono
-import tools.mo3ta.bazeed.ui.theme.Paper
 import tools.mo3ta.bazeed.ui.theme.Paper2
 import tools.mo3ta.bazeed.ui.theme.Saffron
 import tools.mo3ta.bazeed.ui.theme.SaffronLight
-import tools.mo3ta.bazeed.ui.theme.Terracotta
 
 @Composable
 fun AnnouncementCard(
     announcement: Announcement,
     modifier: Modifier = Modifier,
-    onClick: (() -> Unit)? = null
+    onClick: (() -> Unit)? = null,
 ) {
-    val (icon, gradient, onAccent) = categoryStyle(announcement.category)
+    val (icon, gradient, onAccent) = typeStyle(announcement.type)
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -91,7 +89,7 @@ fun AnnouncementCard(
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Text(
-                    text = announcement.category.labelAr,
+                    text = announcement.type.labelAr,
                     fontFamily = Mono,
                     fontSize = 9.sp,
                     color = Green,
@@ -111,7 +109,7 @@ fun AnnouncementCard(
                     modifier = Modifier.size(10.dp)
                 )
                 Text(
-                    text = announcement.timeAgoAr,
+                    text = TimeAgo.format(announcement.createdAt),
                     fontFamily = Almarai,
                     fontSize = 10.sp,
                     color = InkMute
@@ -123,115 +121,30 @@ fun AnnouncementCard(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = Ink,
-                lineHeight = 20.sp
+                lineHeight = 20.sp,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
             )
             Text(
-                text = announcement.snippet,
+                text = announcement.description,
                 fontFamily = Almarai,
                 fontSize = 11.sp,
                 color = InkMute,
-                lineHeight = 16.sp
+                lineHeight = 16.sp,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
             )
         }
     }
 }
 
-@Composable
-fun FeaturedAnnouncementCard(
-    announcement: Announcement,
-    modifier: Modifier = Modifier,
-    onClick: (() -> Unit)? = null
-) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 8.dp)
-            .clip(RoundedCornerShape(22.dp))
-            .background(Terracotta)
-            .clickable(enabled = onClick != null) { onClick?.invoke() }
-            .padding(20.dp)
-    ) {
-        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            Box(
-                Modifier
-                    .clip(RoundedCornerShape(6.dp))
-                    .background(Paper.copy(alpha = 0.18f))
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
-            ) {
-                Text(
-                    text = "FEATURED · هذا الأسبوع",
-                    fontFamily = Mono,
-                    fontSize = 9.sp,
-                    color = Paper,
-                    fontWeight = FontWeight.Medium,
-                    letterSpacing = 2.sp
-                )
-            }
-            Text(
-                text = announcement.title,
-                fontFamily = Amiri,
-                fontSize = 19.sp,
-                fontWeight = FontWeight.Bold,
-                color = Paper,
-                lineHeight = 24.sp
-            )
-            if (announcement.highlight != null) {
-                Row(verticalAlignment = Alignment.Bottom) {
-                    Text(
-                        text = announcement.highlight,
-                        fontFamily = Mono,
-                        fontSize = 44.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = SaffronLight
-                    )
-                    Text(
-                        text = " off",
-                        fontFamily = Mono,
-                        fontSize = 14.sp,
-                        color = SaffronLight.copy(alpha = 0.85f),
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
-                }
-            }
-            Text(
-                text = announcement.snippet,
-                fontFamily = Almarai,
-                fontSize = 12.sp,
-                color = Paper.copy(alpha = 0.85f)
-            )
-            Spacer(Modifier.height(8.dp))
-            Row(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(Paper)
-                    .padding(horizontal = 14.dp, vertical = 9.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    text = "اعرف التفاصيل",
-                    fontFamily = Amiri,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Terracotta
-                )
-            }
-        }
+private fun typeStyle(type: AnnouncementType): Triple<ImageVector, List<Color>, Color> =
+    when (type) {
+        AnnouncementType.Health -> Triple(Icons.Outlined.Spa, listOf(Mint, GreenSoft), Green)
+        AnnouncementType.Alert  -> Triple(Icons.Outlined.Campaign, listOf(SaffronLight, Saffron), Ink)
+        AnnouncementType.Tip    -> Triple(Icons.Outlined.MedicalServices, listOf(Mint, GreenSoft), Green)
+        AnnouncementType.Offer  -> Triple(Icons.Outlined.LocalOffer, listOf(SaffronLight, Saffron), Ink)
     }
-}
-
-private fun categoryStyle(category: AnnouncementCategory): Triple<ImageVector, List<Color>, Color> {
-    return when (category) {
-        AnnouncementCategory.Health ->
-            Triple(Icons.Outlined.Spa, listOf(Mint, GreenSoft), Green)
-        AnnouncementCategory.Alert ->
-            Triple(Icons.Outlined.Campaign, listOf(SaffronLight, Saffron), Ink)
-        AnnouncementCategory.Tip ->
-            Triple(Icons.Outlined.MedicalServices, listOf(Mint, GreenSoft), Green)
-        AnnouncementCategory.Offer ->
-            Triple(Icons.Outlined.LocalOffer, listOf(SaffronLight, Saffron), Ink)
-    }
-}
 
 @Composable
 fun Divider3dp() {

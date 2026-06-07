@@ -11,9 +11,11 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import tools.mo3ta.bazeed.data.SampleData
+import tools.mo3ta.bazeed.data.Repositories
 import tools.mo3ta.bazeed.ui.components.AnnouncementCard
 import tools.mo3ta.bazeed.ui.components.BrandHeader
 import tools.mo3ta.bazeed.ui.components.LocationPill
@@ -25,8 +27,9 @@ fun HomeScreen(
     onMonthlyServiceTap: () -> Unit,
     onAnnouncementTap: (String) -> Unit,
     onSeeAllAnnouncements: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
+    val announcements by Repositories.content.announcements.collectAsState()
     val scrollState = rememberScrollState()
     Column(
         modifier = modifier
@@ -48,11 +51,8 @@ fun HomeScreen(
 
         MonthlyServicePromoCard(onTap = onMonthlyServiceTap)
 
-        SectionHeader(
-            titleAr = "إعلانات بازيد",
-            actionAr = "عرض الكل"
-        )
-        SampleData.announcements.take(3).forEach { ann ->
+        SectionHeader(titleAr = "إعلانات بازيد", actionAr = "عرض الكل")
+        announcements.take(3).forEach { ann ->
             AnnouncementCard(
                 announcement = ann,
                 onClick = { onAnnouncementTap(ann.id) }

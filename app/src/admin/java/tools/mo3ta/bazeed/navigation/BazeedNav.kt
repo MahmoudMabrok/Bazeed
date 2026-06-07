@@ -11,11 +11,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import tools.mo3ta.bazeed.data.Announcement
 import tools.mo3ta.bazeed.data.Repositories
 import tools.mo3ta.bazeed.data.auth.AuthUser
 import tools.mo3ta.bazeed.data.auth.UserRole
 import tools.mo3ta.bazeed.ui.auth.LoginScreen
 import tools.mo3ta.bazeed.ui.screens.AdminDashboardScreen
+import tools.mo3ta.bazeed.ui.screens.AnnouncementEditorScreen
+import tools.mo3ta.bazeed.ui.screens.AnnouncementListScreen
 import tools.mo3ta.bazeed.ui.screens.CreateUserScreen
 import tools.mo3ta.bazeed.ui.screens.NotAuthorizedScreen
 import tools.mo3ta.bazeed.ui.screens.UserListScreen
@@ -38,19 +41,26 @@ fun BazeedAppRoot() {
     }
 }
 
-private enum class AdminRoute { Dashboard, CreateUser, Users }
+private sealed interface AdminRoute {
+    data object Dashboard : AdminRoute
+    data object CreateUser : AdminRoute
+    data object Users : AdminRoute
+    data object Announcements : AdminRoute
+    data class AnnouncementEditor(val existing: Announcement?) : AdminRoute
+}
 
 @Composable
 private fun AdminShell(admin: AuthUser, onSignOut: () -> Unit) {
-    var route by remember { mutableStateOf(AdminRoute.Dashboard) }
+    var route by remember { mutableStateOf<AdminRoute>(AdminRoute.Dashboard) }
 
     Scaffold(containerColor = Sand) { padding ->
         Box(modifier = Modifier.fillMaxSize().padding(padding)) {
-            when (route) {
+            when (val r = route) {
                 AdminRoute.Dashboard -> AdminDashboardScreen(
                     admin = admin,
                     onCreateUser = { route = AdminRoute.CreateUser },
                     onViewUsers = { route = AdminRoute.Users },
+                    onManageAnnouncements = { route = AdminRoute.Announcements },
                     onSignOut = onSignOut,
                 )
 
@@ -60,6 +70,18 @@ private fun AdminShell(admin: AuthUser, onSignOut: () -> Unit) {
 
                 AdminRoute.Users -> UserListScreen(
                     onBack = { route = AdminRoute.Dashboard },
+                )
+
+                AdminRoute.Announcements -> AnnouncementListScreen(
+                    onBack = { route = AdminRoute.Dashboard },
+                    onCreate = { route = AdminRoute.AnnouncementEditor(existing = null) },
+                    onEdit = { ann -> route = AdminRoute.AnnouncementEditor(existing = ann) },
+                )
+
+                is AdminRoute.AnnouncementEditor -> AnnouncementEditorScreen(
+                    existing = r.existing,
+                    onBack = { route = AdminRoute.Announcements },
+                    onSaved = { route = AdminRoute.Announcements },
                 )
             }
         }
