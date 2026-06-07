@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccessTime
+import androidx.compose.material.icons.outlined.Facebook
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material.icons.outlined.Sms
@@ -28,6 +29,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,6 +38,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import tools.mo3ta.bazeed.data.Repositories
 import tools.mo3ta.bazeed.data.SampleData
 import tools.mo3ta.bazeed.ui.theme.Almarai
 import tools.mo3ta.bazeed.ui.theme.Amiri
@@ -53,9 +57,11 @@ fun ContactScreen(
     onCall: () -> Unit,
     onWhatsapp: () -> Unit,
     onDirections: () -> Unit,
+    onFacebook: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val info = SampleData.pharmacy
+    val openNow by Repositories.pharmacyStatus.openNow.collectAsState()
     val scrollState = rememberScrollState()
     Column(
         modifier = modifier
@@ -65,7 +71,7 @@ fun ContactScreen(
             .padding(bottom = 96.dp)
     ) {
         Header()
-        HeroCard()
+        HeroCard(openNow = openNow)
         Spacer(Modifier.height(8.dp))
         ContactRow(
             icon = Icons.Outlined.Phone,
@@ -99,6 +105,14 @@ fun ContactScreen(
             accent = SaffronLight,
             onClick = {}
         )
+        ContactRow(
+            icon = Icons.Outlined.Facebook,
+            labelAr = "فيسبوك",
+            valueEn = "Bazeed Pharmacy",
+            valueAr = "تابعنا على فيسبوك",
+            accent = Terracotta,
+            onClick = onFacebook
+        )
     }
 }
 
@@ -129,7 +143,9 @@ private fun Header() {
 }
 
 @Composable
-private fun HeroCard() {
+private fun HeroCard(openNow: Boolean) {
+    val badgeColor = if (openNow) Green else Terracotta
+    val badgeText = if (openNow) "مفتوحة الآن" else "مغلقة الآن"
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -157,7 +173,7 @@ private fun HeroCard() {
             Row(
                 modifier = Modifier
                     .clip(RoundedCornerShape(8.dp))
-                    .background(Green.copy(alpha = 0.10f))
+                    .background(badgeColor.copy(alpha = 0.10f))
                     .padding(horizontal = 10.dp, vertical = 6.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -166,13 +182,13 @@ private fun HeroCard() {
                     Modifier
                         .size(6.dp)
                         .clip(RoundedCornerShape(50))
-                        .background(Green)
+                        .background(badgeColor)
                 )
                 Text(
-                    text = "مفتوحة الآن",
+                    text = badgeText,
                     fontFamily = Almarai,
                     fontSize = 11.sp,
-                    color = Green,
+                    color = badgeColor,
                     fontWeight = FontWeight.Bold
                 )
             }

@@ -73,3 +73,12 @@ interface ContentRepository {
     suspend fun update(id: String, a: Announcement): Result<Unit>
     suspend fun delete(id: String): Result<Unit>
 }
+
+/**
+ * Pharmacy open/closed flag, toggled by admin and shown live to customers.
+ * Defaults to open when the doc is missing or unreadable.
+ */
+interface PharmacyStatusRepository {
+    val openNow: StateFlow<Boolean>
+    suspend fun setOpen(open: Boolean): Result<Unit>
+}

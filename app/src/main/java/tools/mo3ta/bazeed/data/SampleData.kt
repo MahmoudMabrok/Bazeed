@@ -7,7 +7,7 @@ object SampleData {
     val benefits = listOf(
         Benefit(
             titleAr = "توصيل لباب البيت",
-            detailAr = "مجاني داخل دمنهور",
+            detailAr = "مجاني داخل النوبارية",
             accent = BenefitAccent.Green,
         ),
         Benefit(

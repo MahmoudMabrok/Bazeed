@@ -27,6 +27,12 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // Pharmacy open/closed flag — customers (unauthenticated) need to read this.
+    match /config/pharmacy {
+      allow read:  if true;
+      allow write: if isAdmin();
+    }
+
     // Future content (monthly service config, etc.)
     match /config/{doc} {
       allow read:  if isProvisioned();

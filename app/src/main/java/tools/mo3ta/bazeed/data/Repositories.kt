@@ -3,9 +3,11 @@ package tools.mo3ta.bazeed.data
 import android.content.Context
 import tools.mo3ta.bazeed.data.repo.AuthRepository
 import tools.mo3ta.bazeed.data.repo.ContentRepository
+import tools.mo3ta.bazeed.data.repo.PharmacyStatusRepository
 import tools.mo3ta.bazeed.data.repo.UserRepository
 import tools.mo3ta.bazeed.data.repo.firebase.FirebaseAuthRepository
 import tools.mo3ta.bazeed.data.repo.firebase.FirestoreContentRepository
+import tools.mo3ta.bazeed.data.repo.firebase.FirestorePharmacyStatusRepository
 import tools.mo3ta.bazeed.data.repo.firebase.FirestoreUserRepository
 
 /**
@@ -23,6 +25,8 @@ object Repositories {
         private set
     lateinit var content: ContentRepository
         private set
+    lateinit var pharmacyStatus: PharmacyStatusRepository
+        private set
 
     /** Idempotent — safe to call multiple times (subsequent calls no-op). */
     fun init(applicationContext: Context) {
@@ -30,5 +34,6 @@ object Repositories {
         auth = FirebaseAuthRepository()
         users = FirestoreUserRepository(applicationContext)
         content = FirestoreContentRepository()
+        pharmacyStatus = FirestorePharmacyStatusRepository()
     }
 }

@@ -2,6 +2,7 @@ package tools.mo3ta.bazeed.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -142,7 +143,10 @@ fun SectionHeader(
                 color = Terracotta,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.labelMedium
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier
+                    .clickable(enabled = onAction != null) { onAction?.invoke() }
+                    .padding(horizontal = 4.dp, vertical = 6.dp),
             )
         }
     }

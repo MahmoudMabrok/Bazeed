@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import tools.mo3ta.bazeed.data.Repositories
+import tools.mo3ta.bazeed.data.SampleData
 import tools.mo3ta.bazeed.ui.components.AnnouncementCard
 import tools.mo3ta.bazeed.ui.components.BrandHeader
 import tools.mo3ta.bazeed.ui.components.LocationPill
@@ -30,6 +31,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
 ) {
     val announcements by Repositories.content.announcements.collectAsState()
+    val openNow by Repositories.pharmacyStatus.openNow.collectAsState()
     val scrollState = rememberScrollState()
     Column(
         modifier = modifier
@@ -40,18 +42,22 @@ fun HomeScreen(
     ) {
         BrandHeader(
             titleAr = "أهلًا بك",
-            captionAr = "صيدلية بازيد · البحيرة"
+            captionAr = "${SampleData.pharmacy.nameAr} · ${SampleData.pharmacy.cityAr}"
         )
         Spacer(Modifier.height(4.dp))
         LocationPill(
-            text = "دمنهور — شارع الجيش · مفتوحة الآن",
+            text = "${SampleData.pharmacy.cityAr} · ${if (openNow) "مفتوحة الآن" else "مغلقة الآن"}",
             modifier = Modifier.padding(horizontal = 20.dp)
         )
         Spacer(Modifier.height(12.dp))
 
         MonthlyServicePromoCard(onTap = onMonthlyServiceTap)
 
-        SectionHeader(titleAr = "إعلانات بازيد", actionAr = "عرض الكل")
+        SectionHeader(
+            titleAr = "إعلانات بازيد",
+            actionAr = "عرض الكل",
+            onAction = onSeeAllAnnouncements,
+        )
         announcements.take(3).forEach { ann ->
             AnnouncementCard(
                 announcement = ann,

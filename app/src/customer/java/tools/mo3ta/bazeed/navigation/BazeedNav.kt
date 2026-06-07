@@ -15,13 +15,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import tools.mo3ta.bazeed.data.SampleData
 import tools.mo3ta.bazeed.messaging.FcmTopics
 import tools.mo3ta.bazeed.ui.components.BazeedBottomNav
+import tools.mo3ta.bazeed.ui.screens.AnnouncementDetailScreen
 import tools.mo3ta.bazeed.ui.screens.AnnouncementsScreen
 import tools.mo3ta.bazeed.ui.screens.ContactScreen
 import tools.mo3ta.bazeed.ui.screens.HomeScreen
@@ -38,6 +41,10 @@ enum class BazeedDestination(val route: String) {
         fun fromRoute(route: String?): BazeedDestination = entries.firstOrNull { it.route == route } ?: Home
     }
 }
+
+private const val ANNOUNCEMENT_DETAIL_ROUTE = "announcement/{id}"
+private const val ANNOUNCEMENT_DETAIL_ARG = "id"
+private fun announcementDetailRoute(id: String) = "announcement/$id"
 
 /** Customer flavor entry point: customer shell (no login required). */
 @Composable
@@ -76,24 +83,37 @@ private fun CustomerShell() {
                 composable(BazeedDestination.Home.route) {
                     HomeScreen(
                         onMonthlyServiceTap = { navController.navigateTab(BazeedDestination.MonthlyService) },
-                        onAnnouncementTap = { navController.navigateTab(BazeedDestination.Announcements) },
+                        onAnnouncementTap = { id -> navController.navigate(announcementDetailRoute(id)) },
                         onSeeAllAnnouncements = { navController.navigateTab(BazeedDestination.Announcements) }
                     )
                 }
                 composable(BazeedDestination.Announcements.route) {
-                    AnnouncementsScreen(onAnnouncementTap = { /* detail later */ })
+                    AnnouncementsScreen(
+                        onAnnouncementTap = { id -> navController.navigate(announcementDetailRoute(id)) }
+                    )
+                }
+                composable(
+                    route = ANNOUNCEMENT_DETAIL_ROUTE,
+                    arguments = listOf(navArgument(ANNOUNCEMENT_DETAIL_ARG) { type = NavType.StringType })
+                ) { backStackEntry ->
+                    val id = backStackEntry.arguments?.getString(ANNOUNCEMENT_DETAIL_ARG).orEmpty()
+                    AnnouncementDetailScreen(
+                        announcementId = id,
+                        onBack = { navController.popBackStack() },
+                    )
                 }
                 composable(BazeedDestination.MonthlyService.route) {
                     MonthlyServiceScreen(
                         onBack = { navController.navigateTab(BazeedDestination.Home) },
-                        onDirections = { context.openMaps(SampleData.pharmacy.streetAr) }
+                        onDirections = { context.openMaps(SampleData.pharmacy.mapsUrl) }
                     )
                 }
                 composable(BazeedDestination.Contact.route) {
                     ContactScreen(
                         onCall = { context.dial(SampleData.pharmacy.phone) },
                         onWhatsapp = { context.openWhatsapp(SampleData.pharmacy.phone) },
-                        onDirections = { context.openMaps(SampleData.pharmacy.streetAr) }
+                        onDirections = { context.openMaps(SampleData.pharmacy.mapsUrl) },
+                        onFacebook = { context.openUrl(SampleData.pharmacy.facebookUrl) }
                     )
                 }
             }
@@ -114,13 +134,27 @@ private fun android.content.Context.dial(phone: String) {
 }
 
 private fun android.content.Context.openWhatsapp(phone: String) {
-    val number = phone.replace(" ", "").let { if (it.startsWith("+")) it else "+20$it" }
-    safeStart(Intent(Intent.ACTION_VIEW, Uri.parse("https://wa.me/${number.removePrefix("+")}")))
+    val digits = phone.filter { it.isDigit() }
+    val international = when {
+        phone.trim().startsWith("+") -> digits
+        digits.startsWith("20") -> digits
+        digits.startsWith("0") -> "20${digits.drop(1)}"
+        else -> "20$digits"
+    }
+    safeStart(Intent(Intent.ACTION_VIEW, Uri.parse("https://wa.me/$international")))
 }
 
 private fun android.content.Context.openMaps(query: String) {
-    val encoded = Uri.encode(query)
-    safeStart(Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=$encoded")))
+    val uri = if (query.startsWith("http://") || query.startsWith("https://")) {
+        Uri.parse(query)
+    } else {
+        Uri.parse("geo:0,0?q=${Uri.encode(query)}")
+    }
+    safeStart(Intent(Intent.ACTION_VIEW, uri))
+}
+
+private fun android.content.Context.openUrl(url: String) {
+    safeStart(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
 }
 
 private fun android.content.Context.safeStart(intent: Intent) {
