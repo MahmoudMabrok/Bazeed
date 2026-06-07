@@ -1,5 +1,6 @@
 package tools.mo3ta.bazeed.ui.auth
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -29,9 +30,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import tools.mo3ta.bazeed.data.Repositories
+import tools.mo3ta.bazeed.data.repo.AuthException
 import tools.mo3ta.bazeed.ui.theme.Ink
 import tools.mo3ta.bazeed.ui.theme.Sand
 import tools.mo3ta.bazeed.ui.theme.Terracotta
+
+private const val TAG = "LoginScreen"
 
 /**
  * Shared login UI. Both flavors render this when no one is signed in; routing
@@ -47,7 +51,7 @@ fun LoginScreen(
     val scope = rememberCoroutineScope()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var error by remember { mutableStateOf<String?>(null) }
+    var error by remember { mutableStateOf<AuthException?>(null) }
     var loading by remember { mutableStateOf(false) }
 
     Column(
@@ -85,21 +89,38 @@ fun LoginScreen(
             modifier = Modifier.fillMaxWidth(),
         )
 
-        if (error != null) {
+        error?.let { authEx ->
             Spacer(Modifier.height(12.dp))
-            Text(text = error!!, color = Terracotta, style = MaterialTheme.typography.bodySmall)
+            Text(text = authEx.userMessage, color = Terracotta, style = MaterialTheme.typography.bodySmall)
         }
 
         Spacer(Modifier.height(28.dp))
         Button(
             onClick = {
+                Log.d(TAG, "signIn attempt: $email")
                 loading = true
                 error = null
                 scope.launch {
                     val result = Repositories.auth.signIn(email, password)
                     loading = false
-                    result.exceptionOrNull()?.let { error = it.message ?: "تعذّر تسجيل الدخول" }
-                    // On success, currentUser changes and the app root re-routes.
+                    result.fold(
+                        onSuccess = { user ->
+                            Log.d(TAG, "signed in as ${user.uid}")
+                            // currentUser flips → app root re-routes
+                        },
+                        onFailure = { throwable ->
+                            error = when (throwable) {
+                                is AuthException -> {
+                                    Log.w(TAG, "signIn failed: ${throwable::class.simpleName}")
+                                    throwable
+                                }
+                                else -> {
+                                    Log.e(TAG, "unexpected signIn throw", throwable)
+                                    AuthException.Unknown(throwable)
+                                }
+                            }
+                        },
+                    )
                 }
             },
             enabled = !loading,

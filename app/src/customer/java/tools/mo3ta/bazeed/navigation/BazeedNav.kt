@@ -15,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -28,6 +29,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import tools.mo3ta.bazeed.data.Repositories
 import tools.mo3ta.bazeed.data.SampleData
+import tools.mo3ta.bazeed.messaging.FcmTopics
 import tools.mo3ta.bazeed.ui.auth.LoginScreen
 import tools.mo3ta.bazeed.ui.components.BazeedBottomNav
 import tools.mo3ta.bazeed.ui.screens.AnnouncementsScreen
@@ -51,6 +53,7 @@ enum class BazeedDestination(val route: String) {
 /** Customer flavor entry point: login gate → customer shell. */
 @Composable
 fun BazeedAppRoot() {
+    LaunchedEffect(Unit) { FcmTopics.subscribeAnnouncements() }
     val user by Repositories.auth.currentUser.collectAsState()
     if (user == null) {
         LoginScreen(title = "صيدلية بازيد", subtitle = "تسجيل الدخول")
