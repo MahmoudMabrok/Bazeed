@@ -39,51 +39,43 @@ Client-only scaffold is merged/open on the branch:
 
 **Files:** `app/google-services.json` (local/CI only — gitignored), Firebase console.
 
-- [ ] **Step 1:** In the Firebase console (project `marriyapp`), add a second **Android app** with package name `tools.mo3ta.bazeed.admin`.
-- [ ] **Step 2:** Download the regenerated `google-services.json` (it will contain both client entries) and place it at `app/google-services.json`.
-- [ ] **Step 3:** Verify: `./gradlew assembleCustomerDebug assembleAdminDebug` both succeed.
+- [x] **Step 1:** ~~Firebase console: add a second Android app `tools.mo3ta.bazeed.admin`.~~ Done by maintainer.
+- [x] **Step 2:** ~~Regenerated `google-services.json` with both clients placed at `app/google-services.json`.~~ Done by maintainer.
+- [ ] **Step 3:** Verify: `./gradlew assembleCustomerDebug assembleAdminDebug` both succeed. *(Run locally — the cloud session has no `google-services.json`.)*
 - [ ] **Step 4 (isolation check):** Confirm the customer APK has no admin classes, e.g. inspect the dex for `AdminDashboardScreen` / `CreateUserScreen` — they must be **absent** from `customerDebug` and **present** in `adminDebug`.
 
 ---
 
-## Task 2: Persist the local store across launches (DataStore)
+## Task 2: ~~Persist the local store across launches (DataStore)~~ — SKIPPED
 
-**Why:** `LocalUserStore` is in-memory only — created accounts vanish on cold start. Keep client-only, just durable, so the prototype is usable on one device before Firebase.
-
-**Files:** `gradle/libs.versions.toml`, `app/build.gradle.kts`, `app/src/main/.../data/repo/local/LocalUserStore.kt` (+ maybe a new `DataStoreUserStore.kt`).
-
-- [ ] **Step 1:** Add `androidx.datastore:datastore-preferences` to the version catalog and `app` deps.
-- [ ] **Step 2:** Back `LocalUserStore` with DataStore (serialize the user list + a salted password hash map — do NOT store plaintext passwords even locally; use e.g. a simple hash for the prototype and note it's not production crypto).
-- [ ] **Step 3:** Keep the seed (admin + customer) as a first-run initialization only (don't overwrite real data on every launch).
-- [ ] **Step 4:** Verify created users survive an app restart (manual).
+**Superseded by Task 3.** Going straight to Firebase makes accounts durable and cross-device, so device-local DataStore persistence is no longer worth building. The local impls (`LocalUserStore`, `LocalAuthRepository`, `LocalUserRepository`) remain in the tree as a no-cloud fallback for UI work; if that fallback is ever used seriously, revisit DataStore then.
 
 ---
 
-## Task 3: Firebase implementations behind the existing interfaces
+## Task 3: Firebase implementations behind the existing interfaces — DONE (PR #2)
 
 **Why:** Move from local to real cross-device accounts without touching screens. This is the payoff of the repository seam.
 
-**Files:** `gradle/libs.versions.toml`, `app/build.gradle.kts`, new `app/src/main/.../data/repo/firebase/FirebaseAuthRepository.kt`, `FirestoreUserRepository.kt`, and `app/src/main/.../data/Repositories.kt` (flip the wiring).
+**Files:** `gradle/libs.versions.toml`, `app/build.gradle.kts`, `app/src/main/.../data/repo/firebase/*`, `app/src/main/.../data/Repositories.kt`, `app/src/main/.../BazeedApp.kt`.
 
-- [ ] **Step 1:** Add `firebase-auth` and `firebase-firestore` to the version catalog (BoM pins versions) and `app` deps. (See spec "Gradle changes".)
-- [ ] **Step 2:** `FirebaseAuthRepository` — `signIn` via `FirebaseAuth.signInWithEmailAndPassword`; expose `currentUser` as a `StateFlow<AuthUser?>` by combining the Auth state listener with a read of `users/{uid}` (role comes from Firestore, not claims); `signOut`.
-- [ ] **Step 3:** `FirestoreUserRepository`:
-  - `users` → snapshot listener on the `users` collection (admin-only by rules).
-  - `createUser` → **secondary `FirebaseApp`** pattern: init a named secondary app from the same options, `createUserWithEmailAndPassword` on its `FirebaseAuth` (so the admin's primary session is untouched), capture the new uid, then write `users/{uid}` via the **primary** Firestore instance (admin context), then `signOut()` the secondary auth. See spec "Admin creates a user — client-only path".
-  - Handle `FirebaseAuthUserCollisionException` (email exists) and the partial-failure case (Auth user created but Firestore write failed — surface a retry; the write is idempotent by uid).
-- [ ] **Step 4:** Flip `data/Repositories.kt` to the Firebase impls.
-- [ ] **Step 5:** Admin flavor login: after sign-in, the role gate already checks `user.role != ADMIN` → keep; ensure a non-provisioned account (no `users/{uid}` doc) is treated as not-authorized and signed out.
+- [x] **Step 1:** Added `firebase-auth` + `firebase-firestore` to the catalog and `app` deps.
+- [x] **Step 2:** `FirebaseAuthRepository` — `signIn` via Firebase Auth; `currentUser` `StateFlow` driven by an auth-state listener that loads the role from `users/{uid}` (`UserDocs`); unprovisioned/inactive accounts are signed back out.
+- [x] **Step 3:** `FirestoreUserRepository` — `users` via a snapshot listener; `createUser` via the **secondary `FirebaseApp`** pattern (primary admin session untouched), then the role doc written by the primary (admin) Firestore; `FirebaseAuthUserCollisionException` handled; secondary signed out in `finally`.
+- [x] **Step 4:** `Repositories` now initializes Firebase impls from `BazeedApp.onCreate(this)`.
+- [x] **Step 5:** Admin role gate keeps `role != ADMIN → NotAuthorized`; unprovisioned accounts resolve to `currentUser == null`.
+- [ ] **Step 6 (verify):** Build locally and smoke-test: admin login → create user → new user logs into customer app; admin session persists through creation. *(Needs `google-services.json` + a bootstrapped admin — see Task 5.)*
+- [ ] **Note:** A `TaskAwait.kt` helper provides `Task.await()` without adding `kotlinx-coroutines-play-services`; replace with the library if preferred.
 
 ---
 
-## Task 4: Firestore Security Rules
+## Task 4: Firestore Security Rules — file added (PR #2), deploy pending
 
-**Why:** This is the real authorization control. Rules are already written in the spec — deploy them.
+**Why:** This is the real authorization control.
 
-**Files:** new `firestore.rules` (repo root), Firebase console / CLI deploy.
+**Files:** `firestore.rules` (repo root).
 
-- [ ] **Step 1:** Copy the rules from the spec ("Firestore Security Rules" section) into `firestore.rules`.
-- [ ] **Step 2:** Deploy (console paste or `firebase deploy --only firestore:rules` if the CLI is set up — note: this is config deploy, NOT Cloud Functions).
+- [x] **Step 1:** `firestore.rules` added at repo root (mirrors the spec).
+- [ ] **Step 2:** Deploy (console paste or `firebase deploy --only firestore:rules` — config deploy, NOT Cloud Functions).
 - [ ] **Step 3:** Validate the matrices in the spec "Testing" section using the Rules Playground / emulator: provisioned user reads content; unprovisioned reads nothing; a `user` cannot create/escalate their own `users/{uid}`; only `admin` writes content.
 
 ---
