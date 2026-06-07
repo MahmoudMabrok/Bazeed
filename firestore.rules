@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+
+    function isSignedIn() { return request.auth != null; }
+    function userDoc(uid) { return get(/databases/$(db)/documents/users/$(uid)).data; }
+    function isProvisioned() {
+      return isSignedIn()
+          && exists(/databases/$(db)/documents/users/$(request.auth.uid));
+    }
+    function isAdmin() {
+      return isProvisioned()
+          && userDoc(request.auth.uid).role == 'admin'
+          && userDoc(request.auth.uid).active == true;
+    }
+
+    // User/role docs: only admins manage; a user may read their own.
+    match /users/{uid} {
+      allow read:   if isAdmin() || request.auth.uid == uid;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Announcements: provisioned users read; only admins write.
+    // The 'notified' field is flipped by the GH Action's Admin SDK (bypasses rules).
+    match /announcements/{id} {
+      allow read:  if isProvisioned();
+      allow write: if isAdmin();
+    }
+
+    // Future content (monthly service config, etc.)
+    match /config/{doc} {
+      allow read:  if isProvisioned();
+      allow write: if isAdmin();
+    }
+  }
+}
