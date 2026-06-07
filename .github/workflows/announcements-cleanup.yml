@@ -1,0 +1,29 @@
+name: Announcements — cleanup
+on:
+  schedule:
+    - cron: "0 3 * * *"     # daily at 03:00 UTC
+  workflow_dispatch: {}
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: scripts/announcements/package-lock.json
+
+      - name: Install
+        working-directory: scripts/announcements
+        run: npm ci
+
+      - name: Run cleanup
+        working-directory: scripts/announcements
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: node cleanup.mjs
