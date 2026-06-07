@@ -19,3 +19,6 @@ app/google-services.json
 keystore.properties
 *.jks
 *.keystore
+
+# Local design mocks — not part of the build
+/design-mocks/
