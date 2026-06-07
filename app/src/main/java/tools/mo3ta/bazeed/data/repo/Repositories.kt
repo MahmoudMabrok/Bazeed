@@ -1,6 +1,7 @@
 package tools.mo3ta.bazeed.data.repo
 
 import kotlinx.coroutines.flow.StateFlow
+import tools.mo3ta.bazeed.data.Announcement
 import tools.mo3ta.bazeed.data.auth.AuthUser
 import tools.mo3ta.bazeed.data.auth.UserRole
 
@@ -43,3 +44,14 @@ interface UserRepository {
 
 /** Thrown by repositories for recoverable auth/validation failures. */
 class AuthException(message: String) : Exception(message)
+
+/**
+ * Announcement CRUD. Admin app writes; customer app reads via a live snapshot.
+ * Production impl is FirestoreContentRepository; LocalContentRepository is for unit tests.
+ */
+interface ContentRepository {
+    val announcements: StateFlow<List<Announcement>>
+    suspend fun create(a: Announcement): Result<Announcement>
+    suspend fun update(id: String, a: Announcement): Result<Unit>
+    suspend fun delete(id: String): Result<Unit>
+}
