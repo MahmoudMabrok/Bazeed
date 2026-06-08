@@ -32,10 +32,14 @@ on:
           - inProgress
           - halted
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     name: Build signed AAB and upload
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout
